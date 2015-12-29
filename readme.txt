@@ -1,0 +1,18 @@
+API Discovery (Catalog, Search and Provisioning)
+API Security (SSL, PKI, threat protection, schema validation, encryption, signatures, etc)
+API Identity (AuthN? & AuthZ?, API key, OAuth, SAML, LDAP, proprietary IAM, multifactor, token translation & management)
+API Orchestration (adaptation of multiple services, workflow operations, branching policies, etc.)
+Uniform interface/proxy to multiple backend messaging protocols (JMS, RMI etc)
+Developer and App OnBoarding? (Client ID/App Key generation, Interactive API console)
+Community Management (Blogs, Forums, Social features etc)
+API Lifecycle governance (Versioning)
+Traffic Mediation (SOAP to REST mediation, data format transformation, legacy application integration)
+Traffic Shaping( Rate limitation, Caching etc)
+Analytics & Traffic Monitoring
+API metering, Billing and Monetization
+Data Protection(Data encryption, Data masking etc for PCI/PII compliance)
+Mobile Optimization (Pagination, Compression, JSON etc)
+Deployment Flexibility (on-premise, cloud, managed service, SaaS?, hybrid)
+Operational Integration (System Monitoring, Clustering, Scalability, Migration)
+Mobile Integration (support for push notifications, geolocation, streaming protocols)
+Cloud Integration (SSO to SaaS? providers, IaaS? integration, SaaS? data connectors, hybrid cloud support)
