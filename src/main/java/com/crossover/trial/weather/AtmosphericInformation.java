@@ -3,7 +3,7 @@ package com.crossover.trial.weather;
 /**
  * encapsulates sensor information for a particular location
  */
-class AtmosphericInformation {
+class AtmosphericInformation { //CR: Could make good use of Builder Pattern
 
     /** temperature in degrees celsius */
     private DataPoint temperature;

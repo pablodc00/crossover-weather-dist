@@ -16,7 +16,7 @@ public interface WeatherQueryEndpoint {
      *
      * @return a JSON formatted dict with health information.
      */
-    public String ping();
+    public String ping(); //CR: Should use HTTP Codes for representing service states
 
     /**
      * Retrieve the most up to date atmospheric information from the given airport and other airports in the given

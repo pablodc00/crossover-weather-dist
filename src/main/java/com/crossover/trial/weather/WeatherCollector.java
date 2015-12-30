@@ -14,7 +14,7 @@ public interface WeatherCollector {
      *
      * @return 1 if the endpoint is alive functioning, 0 otherwise
      */
-    Response ping();
+    Response ping(); //CR: Should use HTTP Codes for representing service states
 
     /**
      * Update the airports atmospheric information for a particular pointType with
@@ -28,7 +28,7 @@ public interface WeatherCollector {
      */
     Response updateWeather(@PathParam("iata") String iataCode,
                            @PathParam("pointType") String pointType,
-                           String datapointJson);
+                           String datapointJson); //CR: Post data on the URL is recorded in proxies, use request Body or @FormParam
 
     /**
      * Return a list of known airports as a json formatted list
@@ -55,7 +55,7 @@ public interface WeatherCollector {
      */
     Response addAirport(@PathParam("iata") String iata,
                         @PathParam("lat") String latString,
-                        @PathParam("long") String longString);
+                        @PathParam("long") String longString); //CR: Post data on the URL is recorded in proxies, use request Body or @FormParam
 
     /**
      * Remove an airport from the known airport list

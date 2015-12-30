@@ -20,19 +20,19 @@ import java.util.logging.Logger;
 @Path("/query")
 public class RestWeatherQueryEndpoint implements WeatherQueryEndpoint {
 
-    public final static Logger LOGGER = Logger.getLogger("WeatherQuery");
+    public final static Logger LOGGER = Logger.getLogger("WeatherQuery"); //CR: Use same pattern for logger Names
 
     /** earth radius in KM */
     public static final double R = 6372.8;
 
     /** shared gson json to object factory */
-    public static final Gson gson = new Gson();
+    public static final Gson gson = new Gson(); //CR: narrow the visibility to this class only, public static too wide
 
     /** all known airports */
-    protected static List<AirportData> airportData = new ArrayList<>();
+    protected static List<AirportData> airportData = new ArrayList<>(); //CR: Controller/Endpoint Should not keep state
 
     /** atmospheric information for each airport, idx corresponds with airportData */
-    protected static List<AtmosphericInformation> atmosphericInformation = new LinkedList<>();
+    protected static List<AtmosphericInformation> atmosphericInformation = new LinkedList<>(); //CR: Controller/Endpoint Should not keep state
 
     /**
      * Internal performance counter to better understand most requested information, this map can be improved but
@@ -40,9 +40,9 @@ public class RestWeatherQueryEndpoint implements WeatherQueryEndpoint {
      * we don't want to write this to disk, but will pull it off using a REST request and aggregate with other
      * performance metrics {@link #ping()}
      */
-    public static Map<AirportData, Integer> requestFrequency = new HashMap<AirportData, Integer>();
+    public static Map<AirportData, Integer> requestFrequency = new HashMap<AirportData, Integer>(); //CR: Controller/Endpoint Should not keep state
 
-    public static Map<Double, Integer> radiusFreq = new HashMap<Double, Integer>();
+    public static Map<Double, Integer> radiusFreq = new HashMap<Double, Integer>(); //CR: Controller/Endpoint Should not keep state
 
     /**
      * Retrieve service health including total size of valid data points and request frequency information.
@@ -52,7 +52,7 @@ public class RestWeatherQueryEndpoint implements WeatherQueryEndpoint {
     @GET
     @Path("/ping")
     public String ping() {
-        Map<String, Object> retval = new HashMap<>();
+        Map<String, Object> retval = new HashMap<>(); //CR: change object to immutable using final
 
         int datasize = 0;
         for (AtmosphericInformation ai : atmosphericInformation) {
@@ -71,19 +71,19 @@ public class RestWeatherQueryEndpoint implements WeatherQueryEndpoint {
         }
         retval.put("datasize", datasize);
 
-        Map<String, Double> freq = new HashMap<>();
+        Map<String, Double> freq = new HashMap<>(); //CR: change object to immutable using final
         // fraction of queries
         for (AirportData data : airportData) {
-            double frac = (double)requestFrequency.getOrDefault(data, 0) / requestFrequency.size();
+            double frac = (double)requestFrequency.getOrDefault(data, 0) / requestFrequency.size(); //CR: avoid casting
             freq.put(data.getIata(), frac);
         }
         retval.put("iata_freq", freq);
 
-        int m = radiusFreq.keySet().stream()
+        int m = radiusFreq.keySet().stream() //CR: change variable to immutable using final
                 .max(Double::compare)
                 .orElse(1000.0).intValue() + 1;
 
-        int[] hist = new int[m];
+        int[] hist = new int[m]; //CR: change variable to immutable using final
         for (Map.Entry<Double, Integer> e : radiusFreq.entrySet()) {
             int i = e.getKey().intValue() % 10;
             hist[i] += e.getValue();
@@ -109,7 +109,7 @@ public class RestWeatherQueryEndpoint implements WeatherQueryEndpoint {
         double radius = radiusString == null || radiusString.trim().isEmpty() ? 0 : Double.valueOf(radiusString);
         updateRequestFrequency(iata, radius);
 
-        List<AtmosphericInformation> retval = new ArrayList<>();
+        List<AtmosphericInformation> retval = new ArrayList<>(); //CR: change object to immutable using final
         if (radius == 0) {
             int idx = getAirportDataIdx(iata);
             retval.add(atmosphericInformation.get(idx));

@@ -13,7 +13,8 @@ import javax.ws.rs.core.Response;
  *
  * @author code test administrator
  */
-public class WeatherClient {
+//CR: Clients in a class like this should be in a client module on a different maven project to deliver to clients
+public class WeatherClient { //CR: Use client and documentation frameworks like enunciate or swagger.io
 
     private static final String BASE_URI = "http://localhost:8080";
     /** end point for read queries */

@@ -27,21 +27,21 @@ public class RestWeatherCollectorEndpoint implements WeatherCollector {
     public final static Logger LOGGER = Logger.getLogger(RestWeatherCollectorEndpoint.class.getName());
 
     /** shared gson json to object factory */
-    public final static Gson gson = new Gson();
+    public final static Gson gson = new Gson(); //CR: narrow the visibility to this class only, public static too wide
 
     static {
         init();
     }
 
-    @GET
+    @GET //CR: Could use the method HEAD with no response body once is lighter. HTTP Response code 200 should do it
     @Path("/ping")
     @Override
     public Response ping() {
-        return Response.status(Response.Status.OK).entity("ready").build();
+        return Response.status(Response.Status.OK).entity("ready").build(); //CR: Specification defines 0 or 1 not ready
     }
 
     @POST
-    @Path("/weather/{iata}/{pointType}")
+    @Path("/weather/{iata}/{pointType}") //CR: Post data on the URL is recorded in proxies, use request Body or @FormParam
     @Override
     public Response updateWeather(@PathParam("iata") String iataCode,
                                   @PathParam("pointType") String pointType,
@@ -49,9 +49,9 @@ public class RestWeatherCollectorEndpoint implements WeatherCollector {
         try {
             addDataPoint(iataCode, pointType, gson.fromJson(datapointJson, DataPoint.class));
         } catch (WeatherException e) {
-            e.printStackTrace();
+            e.printStackTrace(); //CR: Log instead
         }
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.OK).build(); //CR: Response code 201 for Post not 200, or 422 for client errors
     }
 
     @GET
@@ -72,17 +72,17 @@ public class RestWeatherCollectorEndpoint implements WeatherCollector {
     @Override
     public Response getAirport(@PathParam("iata") String iata) {
         AirportData ad = findAirportData(iata);
-        return Response.status(Response.Status.OK).entity(ad).build();
+        return Response.status(Response.Status.OK).entity(ad).build(); //CR: Should return 404 if ad is null
     }
 
     @POST
-    @Path("/airport/{iata}/{lat}/{long}")
+    @Path("/airport/{iata}/{lat}/{long}") //CR: Post data on the URL is recorded in proxies, use request Body or @FormParam
     @Override
     public Response addAirport(@PathParam("iata") String iata,
                                @PathParam("lat") String latString,
                                @PathParam("long") String longString) {
-        addAirport(iata, Double.valueOf(latString), Double.valueOf(longString));
-        return Response.status(Response.Status.OK).build();
+        addAirport(iata, Double.valueOf(latString), Double.valueOf(longString)); //CR: Unchecked conversions can raise exceptions
+        return Response.status(Response.Status.OK).build(); //CR: Response code 201 for Post not 200, or 422 for client errors
     }
 
     @DELETE
@@ -93,7 +93,7 @@ public class RestWeatherCollectorEndpoint implements WeatherCollector {
     }
 
     //
-    // Internal support methods
+    // Internal support methods //CR: This is a controller these methods should be in a service class
     //
 
     /**
@@ -106,7 +106,7 @@ public class RestWeatherCollectorEndpoint implements WeatherCollector {
      * @throws WeatherException if the update can not be completed
      */
     public void addDataPoint(String iataCode, String pointType, DataPoint dp) throws WeatherException {
-        int airportDataIdx = getAirportDataIdx(iataCode);
+        int airportDataIdx = getAirportDataIdx(iataCode); //CR: change variable to immutable using final
         AtmosphericInformation ai = atmosphericInformation.get(airportDataIdx);
         updateAtmosphericInformation(ai, pointType, dp);
     }
@@ -118,9 +118,10 @@ public class RestWeatherCollectorEndpoint implements WeatherCollector {
      * @param pointType the data point type as a string
      * @param dp the actual data point
      */
-    public void updateAtmosphericInformation(AtmosphericInformation ai, String pointType, DataPoint dp) throws WeatherException {
+    public void updateAtmosphericInformation(AtmosphericInformation ai, String pointType, DataPoint dp) throws WeatherException { //CR: Exception is never thrown
         final DataPointType dptype = DataPointType.valueOf(pointType.toUpperCase());
 
+        //CR: Use switch on DataPointType once is an Enum
         if (pointType.equalsIgnoreCase(DataPointType.WIND.name())) {
             if (dp.getMean() >= 0) {
                 ai.setWind(dp);
@@ -169,7 +170,7 @@ public class RestWeatherCollectorEndpoint implements WeatherCollector {
             }
         }
 
-        throw new IllegalStateException("couldn't update atmospheric data");
+        throw new IllegalStateException("couldn't update atmospheric data"); //CR: Should't throw WeatherException?
     }
 
     /**
@@ -181,11 +182,11 @@ public class RestWeatherCollectorEndpoint implements WeatherCollector {
      *
      * @return the added airport
      */
-    public static AirportData addAirport(String iataCode, double latitude, double longitude) {
-        AirportData ad = new AirportData();
+    public static AirportData addAirport(String iataCode, double latitude, double longitude) { //CR: narrow the visibility to this class only, public static too wide
+        AirportData ad = new AirportData(); //CR: change variable to immutable using final or use Builder pattern
         airportData.add(ad);
 
-        AtmosphericInformation ai = new AtmosphericInformation();
+        AtmosphericInformation ai = new AtmosphericInformation(); //CR: change object to immutable using final or use Builder pattern
         atmosphericInformation.add(ai);
         ad.setIata(iataCode);
         ad.setLatitude(latitude);
