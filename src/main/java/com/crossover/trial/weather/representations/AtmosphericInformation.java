@@ -1,9 +1,11 @@
-package com.crossover.trial.weather;
+package com.crossover.trial.weather.representations;
+
+import com.crossover.trial.weather.DataPoint;
 
 /**
  * encapsulates sensor information for a particular location
  */
-class AtmosphericInformation { //CR: Could make good use of Builder Pattern
+public class AtmosphericInformation { //CR: Could make good use of Builder Pattern
 
     /** temperature in degrees celsius */
     private DataPoint temperature;
@@ -76,10 +78,10 @@ class AtmosphericInformation { //CR: Could make good use of Builder Pattern
     public void setCloudCover(DataPoint cloudCover) {
         this.cloudCover = cloudCover;
     }
-    protected long getLastUpdateTime() {
+    public long getLastUpdateTime() {
         return this.lastUpdateTime;
     }
-    protected void setLastUpdateTime(long lastUpdateTime) {
+    public void setLastUpdateTime(long lastUpdateTime) {
         this.lastUpdateTime = lastUpdateTime;
     }
 }

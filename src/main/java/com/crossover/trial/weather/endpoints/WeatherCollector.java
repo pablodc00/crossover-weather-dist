@@ -1,4 +1,7 @@
-package com.crossover.trial.weather;
+package com.crossover.trial.weather.endpoints;
+
+import com.crossover.trial.weather.DataPointType;
+import com.crossover.trial.weather.representations.AirportData;
 
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;

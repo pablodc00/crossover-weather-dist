@@ -1,4 +1,6 @@
-package com.crossover.trial.weather;
+package com.crossover.trial.weather.endpoints;
+
+import com.crossover.trial.weather.representations.AtmosphericInformation;
 
 import javax.ws.rs.core.Response;
 

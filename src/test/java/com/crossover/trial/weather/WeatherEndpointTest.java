@@ -1,10 +1,21 @@
 package com.crossover.trial.weather;
 
+import com.crossover.trial.weather.endpoints.RestWeatherCollectorEndpoint;
+import com.crossover.trial.weather.endpoints.RestWeatherQueryEndpoint;
+import com.crossover.trial.weather.endpoints.WeatherCollector;
+import com.crossover.trial.weather.endpoints.WeatherQueryEndpoint;
+import com.crossover.trial.weather.representations.AtmosphericInformation;
+import com.crossover.trial.weather.service.AirportService;
+import com.crossover.trial.weather.service.WeatherService;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
@@ -12,16 +23,16 @@ import static org.junit.Assert.assertEquals;
 
 public class WeatherEndpointTest {
 
-    private WeatherQueryEndpoint _query = new RestWeatherQueryEndpoint();
+    RestWeatherQueryEndpoint _query = new RestWeatherQueryEndpoint();
 
-    private WeatherCollector _update = new RestWeatherCollectorEndpoint();
+    RestWeatherCollectorEndpoint _update = new RestWeatherCollectorEndpoint();
 
     private Gson _gson = new Gson();
 
     private DataPoint _dp;
     @Before
     public void setUp() throws Exception {
-        RestWeatherCollectorEndpoint.init();
+        _update.init();
         _dp = new DataPoint.Builder()
                 .withCount(10).withFirst(10).withMedian(20).withLast(30).withMean(22).build();
         _update.updateWeather("BOS", "wind", _gson.toJson(_dp));
